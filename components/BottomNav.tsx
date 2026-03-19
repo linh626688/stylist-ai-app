@@ -1,34 +1,35 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Shirt, Sparkles, ScanFace, User } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const tabs = [
-  { href: '/app/closet', icon: '👕', label: 'Tủ đồ' },
-  { href: '/app/suggest', icon: '✨', label: 'Gợi ý' },
-  { href: '/app/try-on', icon: '🪞', label: 'Thử đồ' },
-  { href: '/app/profile', icon: '👤', label: 'Tôi' },
+  { href: '/app/closet', icon: Shirt, label: 'Tủ đồ' },
+  { href: '/app/suggest', icon: Sparkles, label: 'Gợi ý' },
+  { href: '/app/try-on', icon: ScanFace, label: 'Thử đồ' },
+  { href: '/app/profile', icon: User, label: 'Tôi' },
 ]
 
 export default function BottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border">
       <div className="flex max-w-lg mx-auto">
-        {tabs.map((tab) => {
-          const isActive = pathname.startsWith(tab.href)
+        {tabs.map(({ href, icon: Icon, label }) => {
+          const isActive = pathname.startsWith(href)
           return (
             <Link
-              key={tab.href}
-              href={tab.href}
-              className={`flex-1 flex flex-col items-center gap-1 py-2.5 transition-colors ${
-                isActive
-                  ? 'text-purple-600 dark:text-purple-400'
-                  : 'text-gray-400 dark:text-gray-500'
-              }`}
+              key={href}
+              href={href}
+              className={cn(
+                'flex-1 flex flex-col items-center gap-1 py-3 transition-colors',
+                isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+              )}
             >
-              <span className="text-xl leading-none">{tab.icon}</span>
-              <span className="text-[10px] font-medium">{tab.label}</span>
+              <Icon className={cn('size-5', isActive && 'fill-primary/20')} strokeWidth={isActive ? 2.5 : 1.75} />
+              <span className="text-[10px] font-medium">{label}</span>
             </Link>
           )
         })}

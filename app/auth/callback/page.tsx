@@ -2,6 +2,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { seedSampleItems } from '@/lib/seed'
 import type { Session } from '@supabase/supabase-js'
 
 export default function AuthCallbackPage() {
@@ -24,6 +25,16 @@ export default function AuthCallbackPage() {
         { onConflict: 'auth_id' }
       )
       if (error) console.error('[callback] upsert user error', error)
+
+      // Fetch the internal user id for seeding
+      const { data: userData } = await supabase
+        .from('users')
+        .select('id')
+        .eq('auth_id', session.user.id)
+        .single()
+      if (userData?.id) {
+        await seedSampleItems(userData.id)
+      }
 
       router.replace('/app/closet')
     }

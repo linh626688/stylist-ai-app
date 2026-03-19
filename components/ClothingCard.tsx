@@ -1,4 +1,5 @@
-import Image from 'next/image'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 
 interface ClothingItem {
   id: string
@@ -18,25 +19,27 @@ const TYPE_LABELS: Record<string, string> = {
   accessory: 'Phụ kiện',
 }
 
-export default function ClothingCard({ item }: { item: ClothingItem }) {
+export default function ClothingCard({ item, className }: { item: ClothingItem; className?: string }) {
   return (
-    <div className="rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 relative aspect-[3/4]">
+    <div className={cn('group relative rounded-2xl overflow-hidden bg-muted aspect-[3/4]', className)}>
       {item.image_url ? (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           src={item.image_url}
           alt={item.name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 640px) 50vw, 33vw"
-          unoptimized
+          className="w-full h-full object-cover transition-transform group-hover:scale-105"
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center text-4xl">👕</div>
+        <div className="w-full h-full flex items-center justify-center text-4xl text-muted-foreground">
+          👕
+        </div>
       )}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2.5">
         <p className="text-white text-xs font-semibold truncate leading-tight">{item.name}</p>
         {item.type && (
-          <p className="text-white/60 text-[10px] mt-0.5">{TYPE_LABELS[item.type] ?? item.type}</p>
+          <Badge variant="secondary" className="mt-1 text-[10px] h-4 px-1.5 bg-white/20 text-white border-0 hover:bg-white/30">
+            {TYPE_LABELS[item.type] ?? item.type}
+          </Badge>
         )}
       </div>
     </div>

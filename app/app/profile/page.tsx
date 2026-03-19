@@ -2,6 +2,9 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Separator } from '@/components/ui/separator'
 
 interface UserProfile {
   name: string | null
@@ -31,39 +34,34 @@ export default function ProfilePage() {
 
   return (
     <div className="px-4 pt-6">
-      <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Tôi</h1>
+      <h1 className="text-xl font-bold tracking-tight mb-6">Tôi</h1>
 
       {profile && (
-        <div className="flex items-center gap-4 mb-8 p-4 bg-gray-50 dark:bg-gray-900 rounded-2xl">
-          {profile.avatar_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={profile.avatar_url}
-              alt="avatar"
-              className="w-14 h-14 rounded-full object-cover"
-            />
-          ) : (
-            <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-2xl">
-              👤
-            </div>
-          )}
-          <div>
-            <p className="font-semibold text-gray-900 dark:text-white text-base">
-              {profile.name ?? 'Người dùng'}
-            </p>
+        <div className="flex items-center gap-4 mb-6 p-4 bg-muted/50 rounded-2xl">
+          <Avatar size="lg" className="size-14">
+            <AvatarImage src={profile.avatar_url ?? undefined} alt={profile.name ?? 'avatar'} />
+            <AvatarFallback className="text-lg">
+              {profile.name?.[0]?.toUpperCase() ?? '👤'}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0">
+            <p className="font-semibold truncate">{profile.name ?? 'Người dùng'}</p>
             {profile.email && (
-              <p className="text-gray-400 text-sm mt-0.5">{profile.email}</p>
+              <p className="text-muted-foreground text-sm truncate mt-0.5">{profile.email}</p>
             )}
           </div>
         </div>
       )}
 
-      <button
+      <Separator className="mb-4" />
+
+      <Button
+        variant="destructive"
         onClick={handleSignOut}
-        className="w-full py-3 text-red-500 text-sm font-semibold bg-red-50 dark:bg-red-950/20 rounded-xl"
+        className="w-full rounded-xl"
       >
         Đăng xuất
-      </button>
+      </Button>
     </div>
   )
 }
